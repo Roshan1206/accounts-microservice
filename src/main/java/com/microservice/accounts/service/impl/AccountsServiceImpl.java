@@ -5,6 +5,7 @@ import com.microservice.accounts.dto.CustomerDto;
 import com.microservice.accounts.entity.Accounts;
 import com.microservice.accounts.entity.Customer;
 import com.microservice.accounts.exception.CustomerAlreadyExistsException;
+import com.microservice.accounts.exception.ResourceNotFoundException;
 import com.microservice.accounts.mapper.CustomerMapper;
 import com.microservice.accounts.repository.AccountsRepository;
 import com.microservice.accounts.repository.CustomerRepository;
@@ -40,6 +41,7 @@ public class AccountsServiceImpl implements IAccountsService {
 
     }
 
+
     private Accounts createNewAccount(Customer customer){
         Accounts newAccount = new Accounts();
         long randomAccNumber = 1000000000L + new Random().nextInt(900000000);
@@ -51,5 +53,22 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setCreatedBy("Anonymous");
         newAccount.setCreatedAt(LocalDateTime.now());
         return newAccount;
+    }
+
+
+    /**
+     * @param mobileNumber
+     * @return
+     */
+    @Override
+    public CustomerDto fetchAccountDetails(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+        );
+
+        Accounts account = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
+        );
+        return null;
     }
 }
