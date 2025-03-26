@@ -1,11 +1,13 @@
 package com.microservice.accounts.service.impl;
 
 import com.microservice.accounts.constants.AccountsConstant;
+import com.microservice.accounts.dto.AccountsDto;
 import com.microservice.accounts.dto.CustomerDto;
 import com.microservice.accounts.entity.Accounts;
 import com.microservice.accounts.entity.Customer;
 import com.microservice.accounts.exception.CustomerAlreadyExistsException;
 import com.microservice.accounts.exception.ResourceNotFoundException;
+import com.microservice.accounts.mapper.AccountsMapper;
 import com.microservice.accounts.mapper.CustomerMapper;
 import com.microservice.accounts.repository.AccountsRepository;
 import com.microservice.accounts.repository.CustomerRepository;
@@ -69,6 +71,20 @@ public class AccountsServiceImpl implements IAccountsService {
         Accounts account = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
                 () -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
         );
-        return null;
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
+        return customerDto;
     }
+
+    /**
+     * @param customerDto
+     * @return
+     */
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+        return false;
+    }
+
+
 }
