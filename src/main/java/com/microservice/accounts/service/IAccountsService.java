@@ -1,14 +1,15 @@
 package com.microservice.accounts.service;
 
-import com.microservice.accounts.dto.CustomerDto;
+import com.microservice.accounts.dto.NewCustomerDto;
+import com.microservice.accounts.dto.ExistingCustomerDto;
 
 public interface IAccountsService {
 
-    void createAccount(CustomerDto customerDto);
+    void createAccount(NewCustomerDto newCustomerDto);
 
-    CustomerDto fetchAccountDetails(String mobileNumber);
+    ExistingCustomerDto fetchAccountDetails(String mobileNumber);
 
-    boolean updateAccount(CustomerDto customerDto);
+    boolean updateAccount(ExistingCustomerDto updateExistingCustomerDto);
 
     boolean deleteAccount(String mobileNumber);
 }

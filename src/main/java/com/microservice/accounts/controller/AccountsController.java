@@ -1,8 +1,9 @@
 package com.microservice.accounts.controller;
 
 import com.microservice.accounts.constants.AccountsConstant;
-import com.microservice.accounts.dto.CustomerDto;
+import com.microservice.accounts.dto.NewCustomerDto;
 import com.microservice.accounts.dto.ErrorResponseDto;
+import com.microservice.accounts.dto.ExistingCustomerDto;
 import com.microservice.accounts.dto.ResponseDto;
 import com.microservice.accounts.service.IAccountsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,8 +40,8 @@ public class AccountsController {
     @Operation(summary = "Create new account", description = "REST API to create new Customer and Account")
     @ApiResponse(responseCode = "201", description = "CREATED")
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto){
-        iAccountsService.createAccount(customerDto);
+    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody NewCustomerDto newCustomerDto){
+        iAccountsService.createAccount(newCustomerDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstant.STATUS_201, AccountsConstant.MESSAGE_201));
     }
@@ -49,9 +50,9 @@ public class AccountsController {
     @Operation(summary = "Fetch account details", description = "REST API to fetch accounts details based on the mobile number")
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/fetch")
-    public ResponseEntity<CustomerDto> fetchAccountDetails(
+    public ResponseEntity<ExistingCustomerDto> fetchAccountDetails(
             @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be of 10 digits") String mobileNumber){
-        CustomerDto customerDto = iAccountsService.fetchAccountDetails(mobileNumber);
+        ExistingCustomerDto customerDto = iAccountsService.fetchAccountDetails(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(customerDto);
     }
@@ -65,7 +66,7 @@ public class AccountsController {
                         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     @PutMapping("/update")
-    public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto){
+    public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody ExistingCustomerDto customerDto){
         boolean isUpdated = iAccountsService.updateAccount(customerDto);
 
         if(isUpdated){

@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Schema(name = "Customer", description = "Schema to hold Customer and Account information")
-public class CustomerDto {
+public class ExistingCustomerDto {
 
     @Schema(description = "Customer name", example = "John Doe")
     @NotEmpty(message = "Name cannot be null or empty")
